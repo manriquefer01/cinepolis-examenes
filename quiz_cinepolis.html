@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Examen Cinépolis – Dulcería & Cocina</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap');
+
+  :root {
+    --navy: #0a1628;
+    --navy2: #0f1f3d;
+    --gold: #f5c518;
+    --gold2: #e6b000;
+    --red: #e63946;
+    --green: #2dc653;
+    --gray: #8892a4;
+    --light: #f0f4ff;
+    --white: #ffffff;
+    --card: #131e38;
+    --border: #1e2d4a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Barlow', sans-serif;
+    background: var(--navy);
+    color: var(--white);
+    min-height: 100vh;
+  }
+
+  /* ===== HEADER ===== */
+  header {
+    background: var(--navy2);
+    border-bottom: 3px solid var(--gold);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+    color: var(--gold);
+    letter-spacing: 1px;
+  }
+  .logo span { color: var(--white); }
+  .header-meta {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .progress-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+  }
+  .progress-text {
+    font-size: 12px;
+    color: var(--gray);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .progress-bar {
+    width: 180px;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--gold2));
+    border-radius: 3px;
+    transition: width 0.4s ease;
+  }
+  .score-badge {
+    background: var(--border);
+    border: 1px solid var(--gold);
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--gold);
+  }
+
+  /* ===== MAIN CONTAINER ===== */
+  main {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 24px 16px 48px;
+  }
+
+  /* ===== CATEGORY PILL ===== */
+  .q-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .cat-pill {
+    background: var(--border);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 4px;
+  }
+  .topic-pill {
+    color: var(--gray);
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .q-num {
+    margin-left: auto;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--gray);
+  }
+
+  /* ===== QUESTION CARD ===== */
+  .question-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 28px 24px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .question-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: var(--gold);
+  }
+  .question-text {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--white);
+  }
+
+  /* ===== OPTIONS ===== */
+  .options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .option-btn {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    text-align: left;
+    width: 100%;
+    color: var(--white);
+  }
+  .option-btn:hover:not(:disabled) {
+    border-color: var(--gold);
+    background: rgba(245,197,24,0.06);
+  }
+  .option-btn:disabled { cursor: default; }
+  .opt-letter {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    min-width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    background: var(--border);
+    color: var(--gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+    transition: all 0.18s ease;
+  }
+  .opt-text {
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--light);
+  }
+  .option-btn.selected { border-color: var(--gold); background: rgba(245,197,24,0.08); }
+  .option-btn.selected .opt-letter { background: var(--gold); color: var(--navy); }
+  .option-btn.correct { border-color: var(--green); background: rgba(45,198,83,0.08); }
+  .option-btn.correct .opt-letter { background: var(--green); color: var(--navy); }
+  .option-btn.wrong { border-color: var(--red); background: rgba(230,57,70,0.08); }
+  .option-btn.wrong .opt-letter { background: var(--red); color: var(--white); }
+  .option-btn.dimmed { opacity: 0.4; }
+
+  /* ===== EXPLANATION ===== */
+  .explanation {
+    display: none;
+    background: rgba(245,197,24,0.05);
+    border: 1px solid rgba(245,197,24,0.25);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-top: 14px;
+  }
+  .explanation.show { display: flex; gap: 12px; align-items: flex-start; }
+  .explanation-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .explanation-text { font-size: 14px; color: #c8d4f0; line-height: 1.5; }
+  .explanation-text strong { color: var(--gold); }
+
+  /* ===== ACTION BUTTONS ===== */
+  .actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .btn {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .btn-primary {
+    background: var(--gold);
+    color: var(--navy);
+    flex: 1;
+  }
+  .btn-primary:hover { background: var(--gold2); }
+  .btn-primary:disabled { opacity: 0.4; cursor: default; }
+  .btn-secondary {
+    background: var(--border);
+    color: var(--white);
+    border: 1px solid var(--gray);
+  }
+  .btn-secondary:hover { border-color: var(--white); }
+
+  /* ===== FILTER BAR ===== */
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .filter-btn {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--gray);
+    border-radius: 20px;
+    padding: 5px 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .filter-btn.active, .filter-btn:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: rgba(245,197,24,0.07);
+  }
+
+  /* ===== RESULTS SCREEN ===== */
+  #results-screen { display: none; }
+  .results-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px 32px;
+    text-align: center;
+  }
+  .results-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 36px;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .results-subtitle { color: var(--gray); font-size: 15px; margin-bottom: 32px; }
+  .score-circle {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    border: 6px solid var(--gold);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 32px;
+  }
+  .score-pct {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 42px;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .score-lbl { font-size: 12px; color: var(--gray); }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .stat-box {
+    background: var(--border);
+    border-radius: 10px;
+    padding: 16px 8px;
+  }
+  .stat-val {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 28px;
+    color: var(--white);
+  }
+  .stat-lbl { font-size: 12px; color: var(--gray); }
+  .cat-breakdown { text-align: left; margin-bottom: 28px; }
+  .cat-breakdown h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 12px;
+  }
+  .cat-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .cat-name { font-size: 14px; min-width: 110px; }
+  .cat-bar-wrap {
+    flex: 1;
+    height: 8px;
+    background: var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .cat-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: var(--gold);
+    transition: width 0.6s ease;
+  }
+  .cat-score-txt { font-size: 13px; color: var(--gray); min-width: 48px; text-align: right; }
+
+  /* ===== START SCREEN ===== */
+  #start-screen {}
+  .hero {
+    text-align: center;
+    padding: 48px 0 36px;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: var(--border);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 42px;
+    line-height: 1.1;
+    margin-bottom: 14px;
+  }
+  .hero h1 em { color: var(--gold); font-style: normal; }
+  .hero p { color: var(--gray); font-size: 16px; max-width: 500px; margin: 0 auto 36px; line-height: 1.6; }
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .info-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+  }
+  .info-icon { font-size: 24px; }
+  .info-box-label { font-size: 11px; color: var(--gray); text-transform: uppercase; letter-spacing: 1px; }
+  .info-box-val {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+  }
+  .category-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 36px;
+  }
+  .cat-tag {
+    background: var(--border);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--light);
+  }
+
+  #quiz-screen { display: none; }
+
+  @media (max-width: 600px) {
+    .progress-bar { width: 100px; }
+    header { flex-wrap: wrap; gap: 10px; }
+    .header-meta { width: 100%; justify-content: space-between; }
+    .question-text { font-size: 18px; }
+    .stats-grid { grid-template-columns: repeat(3,1fr); }
+    .info-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">cine<span>polis</span></div>
+  <div id="header-title" style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:var(--gray);letter-spacing:1px;text-transform:uppercase;">Examen Dulcería & Cocina</div>
+  <div class="header-meta">
+    <div class="progress-wrap" id="progress-wrap" style="display:none">
+      <div class="progress-text" id="progress-text">1 / 100</div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:1%"></div></div>
+    </div>
+    <div class="score-badge" id="score-badge" style="display:none">✓ 0</div>
+  </div>
+</header>
+
+<main>
+
+<!-- START SCREEN -->
+<div id="start-screen">
+  <div class="hero">
+    <div class="hero-badge">Cinépolis — Concurso Operacional</div>
+    <h1>Examen de <em>Procesos</em><br>Dulcería & Cocina</h1>
+    <p>100 preguntas de opción múltiple con base en los manuales oficiales. Opciones diseñadas para evaluar conocimiento profundo.</p>
+  </div>
+
+  <div class="info-grid">
+    <div class="info-box"><div class="info-icon">❓</div><div><div class="info-box-label">Preguntas</div><div class="info-box-val">100 preguntas</div></div></div>
+    <div class="info-box"><div class="info-icon">📚</div><div><div class="info-box-label">Fuente</div><div class="info-box-val">Manuales oficiales</div></div></div>
+    <div class="info-box"><div class="info-icon">🏆</div><div><div class="info-box-label">Modalidad</div><div class="info-box-val">Orden aleatorio</div></div></div>
+    <div class="info-box"><div class="info-icon">💡</div><div><div class="info-box-label">Feedback</div><div class="info-box-val">Inmediato por pregunta</div></div></div>
+  </div>
+
+  <div class="category-list">
+    <span class="cat-tag">🧀 Nachos</span>
+    <span class="cat-tag">🥤 Refrescos</span>
+    <span class="cat-tag">🧊 ICEE</span>
+    <span class="cat-tag">🍿 Palomitas</span>
+    <span class="cat-tag">🌭 Hot Dog</span>
+    <span class="cat-tag">🧂 Sazonadores</span>
+    <span class="cat-tag">⚙️ General</span>
+  </div>
+
+  <div class="filter-bar" style="justify-content:center">
+    <span style="color:var(--gray);font-size:13px;font-weight:600;align-self:center">Modo:</span>
+    <button class="filter-btn active" id="mode-all" onclick="setMode('all')">Todas las preguntas</button>
+    <button class="filter-btn" id="mode-rand50" onclick="setMode('rand50')">50 aleatorias</button>
+    <button class="filter-btn" id="mode-rand25" onclick="setMode('rand25')">Examen rápido (25)</button>
+  </div>
+
+  <div style="text-align:center">
+    <button class="btn btn-primary" style="font-size:20px;padding:16px 60px;" onclick="startQuiz()">▶ COMENZAR EXAMEN</button>
+  </div>
+</div>
+
+<!-- QUIZ SCREEN -->
+<div id="quiz-screen">
+  <div class="q-meta">
+    <span class="cat-pill" id="q-cat">Nachos</span>
+    <span class="topic-pill" id="q-topic">Acomodo</span>
+    <span class="q-num" id="q-num">1 / 100</span>
+  </div>
+  <div class="question-card">
+    <div class="question-text" id="q-text"></div>
+  </div>
+  <div class="options-grid" id="options-grid"></div>
+  <div class="explanation" id="explanation">
+    <div class="explanation-icon">💡</div>
+    <div class="explanation-text" id="explanation-text"></div>
+  </div>
+  <div class="actions">
+    <button class="btn btn-primary" id="btn-next" onclick="nextQuestion()" disabled>Siguiente pregunta →</button>
+    <button class="btn btn-secondary" onclick="showResults()">Ver resultados</button>
+  </div>
+</div>
+
+<!-- RESULTS SCREEN -->
+<div id="results-screen">
+  <div class="results-card">
+    <div class="results-title" id="r-title">¡Examen completado!</div>
+    <div class="results-subtitle" id="r-subtitle">Resultados del examen</div>
+    <div class="score-circle">
+      <div class="score-pct" id="r-pct">0%</div>
+      <div class="score-lbl">Aciertos</div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-box"><div class="stat-val" id="r-correct">0</div><div class="stat-lbl" style="color:var(--green)">✓ Correctas</div></div>
+      <div class="stat-box"><div class="stat-val" id="r-wrong">0</div><div class="stat-lbl" style="color:var(--red)">✗ Incorrectas</div></div>
+      <div class="stat-box"><div class="stat-val" id="r-total">0</div><div class="stat-lbl">Total</div></div>
+    </div>
+    <div class="cat-breakdown">
+      <h3>📊 Desglose por categoría</h3>
+      <div id="cat-breakdown-list"></div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <button class="btn btn-primary" style="font-size:18px;padding:14px 40px;" onclick="restartQuiz()">🔄 Volver a intentar</button>
+      <button class="btn btn-secondary" style="font-size:16px;padding:14px 24px;" onclick="reviewWrong()">📋 Repasar errores</button>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+const ALL_QUESTIONS = [
+  {id:1,category:"Nachos",topic:"Acomodo en exhibidor",question:"En el exhibidor MTM, ¿en qué rejillas se colocan los Nachos CHICO?",options:["Rejillas 1 y 2","Rejillas 2 y 4","Rejillas 1 y 3","Rejillas 3 y 4"],correct:2,explanation:"Las rejillas 1 y 3 son para Nachos CHICO; las rejillas 2 y 4 para Nachos GRANDES."},
+  {id:2,category:"Nachos",topic:"Acomodo en exhibidor",question:"Cuando el sabor con MAYOR venta es Nachos Clásicos, ¿qué sabores ocupa el exhibidor INFERIOR?",options:["Nachos Doritos chicos y Nachos Mix grandes","Nachos Mix chicos/grandes y Nachos Doritos chicos/grandes","Nachos Doritos chicos y Nachos Clásicos grandes","Nachos Takis chicos y Nachos Mix grandes"],correct:1,explanation:"Con Clásicos como top seller, el exhibidor superior es solo Clásicos, y el inferior comparte Mix y Doritos."},
+  {id:3,category:"Nachos",topic:"Acomodo en exhibidor",question:"¿Cuál de las siguientes afirmaciones sobre el estado del exhibidor de nachos es INCORRECTA?",options:["Debe estar limpio sin residuos ni derrames","Debe estar visible para empleados y supervisores","Debe estar a la vista del cliente para generar apetito","Debe estar en buen estado sin roturas ni golpes"],correct:2,explanation:"El documento indica explícitamente que NO debe estar a la vista del cliente."},
+  {id:4,category:"Nachos",topic:"Acomodo en exhibidor",question:"Al acomodar nachos en el exhibidor MTM, ¿cómo se deben intercalar los tamaños entre las rejillas?",options:["Todos los chicos arriba y todos los grandes abajo","Chicos en rejillas impares, grandes en rejillas pares","Grandes en rejillas impares, chicos en rejillas pares","Se acomodan por sabor sin importar el tamaño"],correct:1,explanation:"Rejillas 1 y 3 (impares) = CHICO; Rejillas 2 y 4 (pares) = GRANDES."},
+  {id:5,category:"Nachos",topic:"Acomodo en exhibidor",question:"Cuando Nachos MIX es el de mayor venta, ¿qué ocupa el exhibidor SUPERIOR?",options:["Nachos Mix chicos y Nachos Clásicos grandes","Nachos Doritos chicos y Nachos Doritos grandes","Nachos Mix chicos y Nachos Mix grandes","Nachos Clásicos chicos y Nachos Mix grandes"],correct:2,explanation:"El exhibidor superior resguarda el sabor con mayor venta en ambos tamaños. Si es Mix, lo ocupa completo."},
+  {id:6,category:"Nachos",topic:"Porcionado",question:"Al porcionar Nachos Doritos CHICO, ¿cuál es el peso correcto (sin considerar el blíster)?",options:["100 g","120 g","170 g","210 g"],correct:1,explanation:"Nachos Doritos Chico = 120 g. El peso del blíster NO se considera."},
+  {id:7,category:"Nachos",topic:"Porcionado",question:"Para Nachos MIX GRANDE con ingrediente complementario Takis Fuego, ¿cuántos gramos de Takis y cuál es el peso TOTAL?",options:["50 g de Takis / 210 g total","60 g de Takis / 220 g total","80 g de Takis / 240 g total","40 g de Takis / 200 g total"],correct:2,explanation:"Nachos Mix Grande con Takis Fuego: 80 g de complementario, peso total 240 g."},
+  {id:8,category:"Nachos",topic:"Porcionado",question:"¿Cuál es la base SIEMPRE obligatoria en los Nachos Mix, independientemente del complemento?",options:["Nachos Doritos","Nachos Takis Fuego","Nachos Clásicos","Nachos Mix a partes iguales"],correct:2,explanation:"Los NACHOS CLÁSICOS siempre serán el ingrediente base en los Nachos Mix."},
+  {id:9,category:"Nachos",topic:"Porcionado",question:"Al porcionar Nachos Clásicos en un blíster, ¿cómo se deben colocar?",options:["De forma horizontal y paralela al largo del blíster","De forma vertical y paralela al ancho del blíster","En capas alternas horizontal y vertical","De forma diagonal para maximizar el espacio"],correct:1,explanation:"Los Nachos Clásicos se colocan de forma vertical y paralela al ancho del blíster."},
+  {id:10,category:"Nachos",topic:"Porcionado",question:"¿Cuál es el tiempo de vida de los nachos una vez porcionados?",options:["1 a 2 días","2 a 5 días","3 a 7 días","Hasta 10 días si se mantienen tapados"],correct:1,explanation:"El tiempo de vida es de 2 a 5 DÍAS siempre que se mantengan sus condiciones organolépticas."},
+  {id:11,category:"Nachos",topic:"Porcionado",question:"Para Nachos Mix CHICO con ingrediente complementario Doritos, ¿cuántos gramos de Doritos se colocan?",options:["60 g","50 g","40 g","30 g"],correct:2,explanation:"Nachos Mix Chico con Doritos: 40 g de ingrediente complementario, peso total 100 g."},
+  {id:12,category:"Nachos",topic:"Porcionado",question:"Para los Nachos Mix GRANDES, ¿cómo se colocan los Nachos Clásicos en el blíster?",options:["En una sola fila al centro","En dos filas en los extremos","Cubriendo toda la base de forma uniforme","En una fila al fondo y una diagonal al frente"],correct:1,explanation:"Para el tamaño GRANDE se realizan dos filas en los extremos del blíster."},
+  {id:13,category:"Nachos",topic:"Porcionado",question:"Al apilar los recipientes térmicos con nachos porcionados, ¿cuántas camas es el máximo permitido?",options:["2 camas","3 camas","4 camas","6 camas"],correct:2,explanation:"Se deben apilar con el contenedor de queso hacia adentro, uno sobre otro en máximo 4 camas."},
+  {id:14,category:"Nachos",topic:"Porcionado",question:"¿Cuánto pesa un Nachos Clásico GRANDE correctamente porcionado?",options:["170 g","190 g","210 g","240 g"],correct:2,explanation:"Nachos Clásicos Grandes = 210 g (sin considerar el peso del blíster)."},
+  {id:15,category:"Refrescos",topic:"Especificaciones",question:"¿Cuál es la temperatura IDEAL de un refresco correctamente servido?",options:["0°C a 2°C","2°C a 7°C","5°C a 10°C","7°C a 12°C"],correct:1,explanation:"La condición ideal de temperatura para refrescos es de 2°C a 7°C."},
+  {id:16,category:"Refrescos",topic:"Especificaciones",question:"Si un refresco presenta aspecto PÁLIDO y SIN BURBUJAS, ¿qué variación indica esto?",options:["Temperatura mayor a la ideal","Pérdida de CO2","Caducidad del insumo","Falta de hielo en el bin"],correct:1,explanation:"Pálido y sin burbujas indica pérdida de CO2 en el refresco."},
+  {id:17,category:"Refrescos",topic:"CO₂",question:"¿A qué presión se debe realizar el cambio del tanque de CO₂ en el sistema fountain de refrescos?",options:["Por debajo de 400 psi o zona roja","Por debajo de 500 psi o zona roja","Por debajo de 600 psi o zona roja","Por debajo de 700 psi o zona roja"],correct:2,explanation:"Para refrescos, el cambio se realiza cuando la aguja está por debajo de 600 psi o en zona roja."},
+  {id:18,category:"Refrescos",topic:"CO₂",question:"Para conectar la válvula al nuevo tanque de CO₂, ¿cómo se gira la llave de tuercas al ATORNILLAR?",options:["Contrario a las manecillas del reloj","A las manecillas del reloj","Se gira en ambos sentidos alternadamente","No se usa llave, se ajusta a mano"],correct:1,explanation:"Para atornillar la válvula al nuevo tanque, se gira en sentido de las manecillas del reloj."},
+  {id:19,category:"Refrescos",topic:"Jarabe",question:"Al limpiar la manguera de jarabe durante el cambio de bag in box, ¿qué está PROHIBIDO usar?",options:["Agua tibia","Los dedos para frotar el interior","Cualquier tipo de químico","Egapack para cubrir la manguera"],correct:2,explanation:"NO se debe utilizar algún químico al limpiar la manguera; solo agua."},
+  {id:20,category:"Refrescos",topic:"Jarabe",question:"¿Cómo se debe abrir la tapa del bag in box nuevo para no dañar la bolsa de jarabe?",options:["Con tijeras por el borde marcado","Con la llave de tuercas en el círculo punteado","Con pequeños golpes del puño en el círculo punteado","Jalando la pestaña con ambas manos"],correct:2,explanation:"Se abren dando pequeños golpes con el puño en el círculo punteado. NUNCA objetos puntiagudos."},
+  {id:21,category:"Refrescos",topic:"Jarabe",question:"¿Cuál es el sistema de rotación que se debe respetar al cambiar los bag in box de jarabe?",options:["FIFO – First In, First Out","FEFO – First Expired, First Out","LIFO – Last In, First Out","LEFO – Last Expired, First Out"],correct:1,explanation:"Se debe respetar el sistema FEFO (First Expired First Out): primero en expirar, primero en salir."},
+  {id:22,category:"Refrescos",topic:"Torre",question:"Al habilitar la torre de refrescos, ¿cuántos segundos se debe presionar el botón con flechas de cada válvula?",options:["1 a 2 segundos","3 a 4 segundos","5 a 6 segundos","8 a 10 segundos"],correct:1,explanation:"Se presiona el botón con flechas durante 3 a 4 segundos para reanudar flujos y purgar."},
+  {id:23,category:"Refrescos",topic:"Servido",question:"Para un vaso MEDIANO de 20 oz, ¿cuánto hielo se debe servir?",options:["½ cucharón","¾ del cucharón","1 cucharón al ras","1 cucharón copeteado"],correct:1,explanation:"Vaso Mediano 20 oz = ¾ del cucharón de hielo."},
+  {id:24,category:"Refrescos",topic:"Servido",question:"¿Qué tamaños de vaso de refresco comparten la MISMA tapa?",options:["Chico y Mediano","Mediano y Grande","Grande y Jumbo","Todos tienen tapa diferente"],correct:0,explanation:"Los vasos Chico y Mediano usan la misma tapa."},
+  {id:25,category:"Refrescos",topic:"Servido",question:"¿Con qué frecuencia MÍNIMA debe cambiarse la solución sanitizante del porta cucharón?",options:["1 vez al día","2 veces al día","3 veces al día o cuando se encuentre sucia","Cada hora de operación"],correct:2,explanation:"La solución sanitizante debe cambiarse 3 veces al día o cuando se encuentre sucia o contaminada."},
+  {id:26,category:"Refrescos",topic:"Servido",question:"Para el vaso JUMBO de 42 oz, ¿qué botón de servido se debe presionar?",options:["Botón 1","Botón 2","Botón 3","Botón 4"],correct:3,explanation:"Vaso Jumbo 42 oz = Botón de servido '4' o imagen de refresco jumbo."},
+  {id:27,category:"Refrescos",topic:"Inhabilitación",question:"¿Qué producto se usa para limpiar el INTERIOR de la bandeja de goteo del depósito de hielo durante la inhabilitación?",options:["Suma Break Up con paño blanco","Suma J512 con paño verde","Solo agua con paño blanco","Suma J512 y luego enjuague con agua"],correct:1,explanation:"Se vacía Suma J512 en la base de la bandeja de goteo y se tallan las paredes con paño VERDE."},
+  {id:28,category:"Refrescos",topic:"Inhabilitación",question:"¿Con qué producto se limpia el EXTERIOR del depósito de hielo durante la inhabilitación?",options:["Suma J512 y paño blanco","Suma Break Up y paño verde","Solo agua y paño verde","Suma J512 y paño verde"],correct:1,explanation:"El exterior se limpia con paño verde y Suma Break Up."},
+  {id:29,category:"Refrescos",topic:"Infraestructura",question:"¿Cuál es el flujo de agua mínimo requerido para el correcto funcionamiento del sistema fountain?",options:["Mayor o igual a 200 LPH","Mayor o igual a 280 LPH","Mayor o igual a 380 LPH","Mayor o igual a 500 LPH"],correct:2,explanation:"El flujo del agua correcto debe ser mayor o igual a 380 LPH."},
+  {id:30,category:"Refrescos",topic:"Infraestructura",question:"¿A qué nivel de capacidad DEBE mantenerse siempre el depósito de hielo durante la operación?",options:["½ de capacidad","⅔ de capacidad","¾ de capacidad","Al tope siempre"],correct:2,explanation:"El depósito de hielo DEBE estar siempre ¾ de capacidad."},
+  {id:31,category:"ICEE",topic:"Composición",question:"¿Cuál es la composición porcentual correcta de la bebida ICEE?",options:["50% CO₂, 10% jarabe, 40% agua","56% CO₂, 8% jarabe, 36% agua","44% CO₂, 8% jarabe, 48% agua","60% CO₂, 5% jarabe, 35% agua"],correct:1,explanation:"La bebida ICEE está compuesta por 56% de CO₂, 8% de jarabe y 36% de agua."},
+  {id:32,category:"ICEE",topic:"Composición",question:"¿En cuántos tamaños se ofrece el ICEE de forma ESTÁNDAR (no temporal)?",options:["Solo uno: Grande 32 oz","Dos: Grande 32 oz y Jumbo 40 oz","Tres: Mediano, Grande y Jumbo","Cuatro: Chico, Mediano, Grande y Jumbo"],correct:0,explanation:"El ICEE estándar es Grande (32 oz). El Jumbo (40 oz) solo está disponible en ciertos periodos."},
+  {id:33,category:"ICEE",topic:"Composición",question:"¿Cuántos vasos de 32 oz rinde aproximadamente un bag in box de jarabe ICEE de 19 litros?",options:["100 vasos","150 vasos","190 vasos","250 vasos"],correct:2,explanation:"1 litro rinde 10 vasos; 19 litros = aproximadamente 190 vasos por bag in box."},
+  {id:34,category:"ICEE",topic:"Habilitación",question:"¿Cuántos bag in box deben estar conectados para una máquina ICEE de DOS cámaras?",options:["2 bag in box","3 bag in box","4 bag in box","6 bag in box"],correct:2,explanation:"Se necesitan 2 bag in box por cámara; máquina de 2 cámaras = 4 bag in box conectados."},
+  {id:35,category:"ICEE",topic:"CO₂",question:"¿A qué presión se debe cambiar el tanque de CO₂ de la máquina ICEE?",options:["Por debajo de 400 psi","Por debajo de 500 psi","Por debajo de 600 psi","Por debajo de 700 psi"],correct:1,explanation:"Para ICEE el cambio se realiza si está por debajo de 500 psi (diferente a refrescos que es 600 psi)."},
+  {id:36,category:"ICEE",topic:"CO₂",question:"¿Está permitido intercambiar los tanques de CO₂ entre los equipos de refrescos y los de ICEE?",options:["Sí, son compatibles","Solo si son del mismo tamaño","No, está explícitamente prohibido","Solo en emergencias con autorización del supervisor"],correct:2,explanation:"El manual indica explícitamente: NO se deben intercambiar los tanques de CO₂ entre refrescos e ICEE."},
+  {id:37,category:"ICEE",topic:"Encendido",question:"En la máquina ICEE modelo Millenium, ¿cómo se enciende?",options:["Presionando el botón RUN en ambos lados","Colocando en posición ON el botón MÁSTER SWITCH","Usando las flechas para seleccionar #1 y presionar ON","Presionando SET VALUE y girando la perilla"],correct:1,explanation:"En el Millenium se coloca en posición de encendido el botón 'MÁSTER SWITCH'."},
+  {id:38,category:"ICEE",topic:"Encendido",question:"Después de encender la máquina ICEE, ¿cuánto tiempo se debe esperar antes de que esté lista?",options:["5 minutos","10 minutos","15 minutos","20 minutos"],correct:2,explanation:"Se debe cerrar la puerta superior y esperar 15 minutos hasta que las luces frontales se apaguen."},
+  {id:39,category:"ICEE",topic:"Encendido",question:"Si la luz frontal permanece ENCENDIDA de forma permanente (sin parpadear) en una máquina Millenium, ¿qué indica?",options:["Falta de jarabe","Falta de agua y/o CO₂","Descongelamiento en proceso","Modo de protección activado"],correct:2,explanation:"Luz permanentemente encendida = DESCONGELAMIENTO. No se debe despachar hasta que se apague."},
+  {id:40,category:"ICEE",topic:"Apagado",question:"En una máquina ICEE modelo FBD de TRES cámaras, ¿cómo se apaga correctamente?",options:["Apagando el switch general que alimenta la máquina","Presionando OFF y luego DEFROST una sola vez","Girando la perilla a posición OFF en cada cámara","Presionando MÁSTER SWITCH a posición OFF"],correct:1,explanation:"En FBD (2 y 3 cámaras): presionar primero 'OFF' y luego 'DEFROST' una sola vez."},
+  {id:41,category:"ICEE",topic:"Servido",question:"Al servir un ICEE de UN sabor en máquina de DOS cámaras, ¿cómo se debe jalar la palanca?",options:["A la mitad del recorrido para no compactar","Hasta el tope en un solo tiempo","En dos tiempos iguales","Sin llegar al tope para mantener presión"],correct:1,explanation:"En máquinas de dos cámaras la palanca debe jalarse hasta el tope; en tres cámaras NO debe llegar al tope."},
+  {id:42,category:"ICEE",topic:"Servido",question:"Al servir un ICEE MIX, ¿cómo se coloca el vaso para el PRIMER sabor?",options:["Derecho y centrado en la boquilla","Inclinado en la boquilla del primer sabor","Directo sin inclinación en el primer sabor","Inclinado en la boquilla del segundo sabor primero"],correct:1,explanation:"Para el ICEE mix el vaso se coloca tapado e INCLINADO en la boquilla del primer sabor."},
+  {id:43,category:"ICEE",topic:"Servido",question:"Si se sirven 5 ICEE consecutivos desde la misma cámara, ¿cuánto tiempo se debe esperar antes de volver a usarla?",options:["2 minutos","5 minutos","10 minutos","15 minutos"],correct:1,explanation:"Después de 5 ICEE consecutivos de la misma cámara, esperar 5 minutos para que se congele nuevamente."},
+  {id:44,category:"ICEE",topic:"Especificaciones técnicas",question:"¿Cuál debe ser la presión del agua para el correcto funcionamiento de las máquinas ICEE?",options:["20 psi constantes","30 psi constantes","40 psi constantes","50 psi constantes"],correct:1,explanation:"La presión del agua que alimenta las máquinas ICEE debe mantenerse constante a 30 psi."},
+  {id:45,category:"ICEE",topic:"Especificaciones técnicas",question:"¿Cuántos cm libres de ventilación deben tener las máquinas ICEE a los costados y parte trasera?",options:["10 cm","15 cm","20 cm","25 cm"],correct:1,explanation:"Las máquinas deben tener 15 cm libres a los costados y parte trasera para ventilación."},
+  {id:46,category:"ICEE",topic:"Tactos",question:"Si el ICEE presenta textura MUY SECA (congelado), ¿qué lo ocasiona?",options:["Temperatura mayor a la ideal","Calibración del equipo o calidad/caducidad del insumo","Olor ácido atípico del jarabe","Caudal mayor o igual a 7 litros por minuto"],correct:1,explanation:"Textura muy seca = Calibración del equipo (presión del agua 30 PSI) o calidad/caducidad del insumo."},
+  {id:47,category:"Palomitas",topic:"Tactos",question:"¿Cuál es la temperatura IDEAL para las Palomitas Mantequilla?",options:["40°C a 50°C","50°C a 60°C","60°C a 70°C","45°C a 55°C"],correct:1,explanation:"La condición ideal de temperatura para Palomitas Mantequilla es de 50°C a 60°C."},
+  {id:48,category:"Palomitas",topic:"Tactos",question:"¿Qué tipo de aceite se usa ÚNICAMENTE para las Palomitas Takis Fuego?",options:["Aceite Regular exclusivamente","Aceite Canola o Light exclusivamente","Aceite de maíz o Regular","Cualquier aceite según disponibilidad"],correct:1,explanation:"Para Palomitas Takis Fuego se utiliza ÚNICAMENTE ACEITE CANOLA O LIGHT."},
+  {id:49,category:"Palomitas",topic:"Tactos",question:"Las Palomitas Caramelo tienen temperatura ideal diferente al resto. ¿Cuál es?",options:["50°C a 60°C","45°C a 55°C","40°C a 50°C","55°C a 65°C"],correct:2,explanation:"Palomitas Caramelo: temperatura ideal 40°C a 50°C (más baja que mantequilla y botanas)."},
+  {id:50,category:"Palomitas",topic:"Tactos",question:"Para Palomitas Caramelo, ¿cuál es el tiempo MÁXIMO de cocción en olla?",options:["4 minutos","5 minutos","7 minutos","10 minutos"],correct:2,explanation:"El tiempo de cocción en olla para Palomitas Caramelo NO debe exceder los 7 MINUTOS."},
+  {id:51,category:"Palomitas",topic:"Tactos",question:"¿Cuál es el color ideal de las Palomitas Doritos Nacho?",options:["Rojo intenso con brillo moderado","Naranja intenso con brillo moderado","Naranja cobrizo con intensidad y brillo moderado","Amarillo dorado con intensidad media"],correct:2,explanation:"Palomitas Doritos Nacho: color ideal Naranja cobrizo con intensidad y brillo moderado."},
+  {id:52,category:"Palomitas",topic:"Tactos",question:"Si las Palomitas Cheetos Mix presentan olor RANCIO, ¿cuál es la causa más probable?",options:["Tiempo de cocción excesivo","Insumos caducados o contaminados","Falta de sazonador","Aceite incorrecto utilizado"],correct:1,explanation:"El olor rancio en Palomitas Cheetos Mix indica insumos caducados o contaminados."},
+  {id:53,category:"Palomitas",topic:"Tactos",question:"¿Cuándo se debe aplicar el sazonador en las Palomitas Takis Fuego?",options:["Antes de la cocción, dentro de la olla","Durante la cocción, a mitad del proceso","Dentro del primer minuto posterior a la descarga","Al momento de servir al cliente"],correct:2,explanation:"El sazonador se agrega dentro del primer minuto posterior a la descarga de las palomitas."},
+  {id:54,category:"Palomitas",topic:"Warmer Gold Medal",question:"¿Para qué tipo de palomitas se utiliza EXCLUSIVAMENTE el warmer Gold Medal?",options:["Para todas las palomitas sin distinción","Solo para Palomitas Mantequilla y Caramelo","Solo para palomitas con botana (Cheetos, Nachos y Takis)","Para Palomitas Caramelo y Doritos únicamente"],correct:2,explanation:"El warmer será utilizado ÚNICAMENTE para las palomitas con botana: Cheetos, Nachos y Takis."},
+  {id:55,category:"Palomitas",topic:"Warmer Gold Medal",question:"¿A qué temperatura se deben configurar TODOS los contenedores del warmer Gold Medal?",options:["100°F","120°F","140°F","160°F"],correct:2,explanation:"La temperatura de 140°F se DEBE utilizar en cada contenedor del warmer Gold Medal."},
+  {id:56,category:"Palomitas",topic:"Warmer Gold Medal",question:"¿Cuántos contenedores tiene el warmer Gold Medal modelo 2687-020?",options:["2 contenedores","3 contenedores","4 contenedores","5 contenedores"],correct:1,explanation:"El warmer Gold Medal modelo 2687-020 tiene tres contenedores con cubiertas laterales independientes."},
+  {id:57,category:"Palomitas",topic:"Warmer Gold Medal",question:"¿Qué pasos se deben seguir para que el warmer Gold Medal COMIENCE a calentar después de configurar la temperatura?",options:["Solo presionar SET para guardar y esperar","Presionar SET para guardar, luego presionar SET + flecha abajo simultáneamente","Apagar y encender de nuevo para activar","Girar la perilla al máximo y luego bajarla a 140°F"],correct:1,explanation:"Primero presionar SET para guardar la temperatura, luego presionar SET + flecha hacia abajo al mismo tiempo para iniciar el calentamiento."},
+  {id:58,category:"Palomitas",topic:"Warmer Gold Medal",question:"Durante la inhabilitación del warmer Gold Medal, ¿cómo se vacía el producto sobrante?",options:["Con las manos usando guantes de seguridad","Con el cucharón grande en bolsas, como indica el MPP Palomitas","Tirando directamente a la basura desde el contenedor","Usando el cucharón pequeño para mayor precisión"],correct:1,explanation:"Se vacía el producto sobrante con ayuda del cucharón grande en bolsas, como indica el MPP Palomitas vigente."},
+  {id:59,category:"Palomitas",topic:"Warmer Gold Medal",question:"Al realizar la limpieza DIARIA del warmer Gold Medal, ¿qué se usa para limpiar el vidrio frontal y superior?",options:["Suma J512 con paño verde","Suma Break Up con paño blanco","Solo agua con paño blanco","Suma J512 con paño blanco"],correct:1,explanation:"Tanto el vidrio frontal como el superior se limpian con Suma Break Up y paño BLANCO."},
+  {id:60,category:"Palomitas",topic:"Warmer Gold Medal",question:"¿Cómo se introducen las palomitas al cucharón de servido en el warmer Gold Medal?",options:["De arriba hacia abajo con la parte angosta al frente","De abajo hacia arriba, tomando con la parte ancha y sirviendo por la parte angosta","De lado, barriendo las palomitas hacia afuera","De arriba hacia abajo tomando con la parte ancha"],correct:1,explanation:"Se introduce el cucharón de abajo hacia arriba, se toman con la parte ancha y se sirven por la parte angosta."},
+  {id:61,category:"Sazonadores",topic:"Porcionado",question:"Para una palomera de 32 oz con sazonador Takis Fuego, ¿cuántos gramos se deben usar?",options:["60 g","70 g","120 g","140 g"],correct:3,explanation:"Palomera 32 oz con Takis Fuego = 140 g de sazonador."},
+  {id:62,category:"Sazonadores",topic:"Porcionado",question:"¿Cuántos gramos de sazonador Cheetos se usan para una palomera de 16 oz?",options:["40 g","60 g","70 g","120 g"],correct:1,explanation:"Palomera 16 oz con Cheetos = 60 g. (Takis Fuego 16oz = 70g, Dorinachos 16oz = 60g)."},
+  {id:63,category:"Sazonadores",topic:"Porcionado",question:"¿Cuál es el tiempo de vida del sazonador porcionado en el inserto, tapado y en condiciones correctas?",options:["24 horas","48 horas","72 horas","96 horas"],correct:1,explanation:"En condiciones correctas (tapado, lugar fresco y seco), el tiempo de vida es de 48 horas."},
+  {id:64,category:"Sazonadores",topic:"Porcionado",question:"Para marcar un salero con la medida correcta de sazonador, ¿qué herramienta se usa para hacer las abolladuras?",options:["Un cuchillo por el exterior","Un punzón, asegurando NO perforar el salero","Un destornillador plano","Un marcador permanente en la superficie"],correct:1,explanation:"Se realizan abolladuras con un punzón. Se debe asegurar NO perforar el salero."},
+  {id:65,category:"Sazonadores",topic:"Porcionado",question:"¿Por qué razón PRINCIPAL se utilizan saleros marcados en el proceso de porcionado de sazonadores?",options:["Para evitar que el sazonador se derrame","Para mejorar el tiempo de preparación y reducir tiempos de porcionado y uso de bolsas plásticas","Para facilitar la limpieza del área de trabajo","Para que el cliente identifique el sabor de sus palomitas"],correct:1,explanation:"El objetivo es mejorar el tiempo de preparación y reducir los tiempos de porcionado, así como el uso de bolsas plásticas."},
+  {id:66,category:"Sazonadores",topic:"Porcionado",question:"¿Cuántos gramos de sazonador Dorinachos se usan para una palomera de 32 oz?",options:["60 g","70 g","120 g","140 g"],correct:2,explanation:"Palomera 32 oz con Dorinachos = 120 g. (Igual que Cheetos 32oz, diferente a Takis 32oz = 140g)."},
+  {id:67,category:"Hot Dog",topic:"Empapelado",question:"¿Cuántas veces se debe enrollar el diámetro de la salchicha con papel aluminio antes de colocarla en el pan?",options:["Solo una vez cubriendo su diámetro","Dos vueltas completas para mayor protección","Tres vueltas para asegurar el calor","No se enrolla, se coloca directamente en el pan"],correct:0,explanation:"La salchicha se enrolla hasta que quede cubierto SOLO UNA VEZ su diámetro. NO se enrolla por completo."},
+  {id:68,category:"Hot Dog",topic:"Empapelado",question:"¿Cuál es el tiempo de vida del hot dog DESPUÉS de ser empapelado?",options:["2 horas","4 horas","6 horas","8 horas"],correct:2,explanation:"El tiempo de vida del hot dog después de ser empapelado es de 6 HORAS."},
+  {id:69,category:"Hot Dog",topic:"Empapelado",question:"Si el pan se rompe completamente al abrirlo durante el proceso de empapelado, ¿qué se debe hacer?",options:["Usarlo igualmente ya que el aluminio lo sostendrá","Mermarlo y registrarlo en la Bitácora control de productos","Pegarlo con el aluminio y continuar el proceso","Reportarlo al supervisor y esperar instrucciones"],correct:1,explanation:"Si se rompe completamente en dos partes o se fracciona, se mermará y registrará en la Bitácora control de productos."},
+  {id:70,category:"Hot Dog",topic:"Empapelado",question:"¿En qué parte del hot dog empapelado se debe escribir el número de lote?",options:["En la parte superior visible","En uno de los extremos laterales","En la parte inferior","En el centro del paquete"],correct:2,explanation:"Se coloca con marcador en la PARTE INFERIOR del hot dog empapelado el número de lote."},
+  {id:71,category:"Hot Dog",topic:"Empapelado",question:"Los hot dogs con salchichas del día anterior, ¿cómo se identifican y dónde se colocan?",options:["Se marcan con X y se colocan al fondo del warmer","Se marcan con asterisco (*) y se colocan hasta ARRIBA para vender primero en alta afluencia","Se marcan con asterisco (*) y se separan en otro warmer","No se identifican diferente, se mezclan con los demás"],correct:1,explanation:"Se marcan con asterisco (*) y se colocan hasta arriba para ser los primeros en venderse en hora de alta afluencia."},
+  {id:72,category:"Hot Dog",topic:"Empapelado",question:"¿Qué paso del proceso de empapelado forma un TRIÁNGULO con el papel aluminio?",options:["El paso 5 al envolver el hot dog","El paso 7 al doblar una de las puntas hasta donde inicia el hot dog","El paso 6 al presionar la orilla","El paso 9 al presionar el doblez final"],correct:1,explanation:"En el paso 7 se dobla una de las puntas hasta donde inicia el hot dog, formando un triángulo."},
+  {id:73,category:"Hot Dog",topic:"Tandas",question:"¿Qué porcentaje del pronóstico de venta del día se elabora en la Tanda 1 (Habilitación)?",options:["10%","20%","40%","60%"],correct:1,explanation:"Tanda 1 / Habilitación: elaborar un 20% del pronóstico del día."},
+  {id:74,category:"Hot Dog",topic:"Tandas",question:"¿Cada cuántas horas debe realizarse la elaboración de cada tanda de hot dog?",options:["Cada 2 horas","Cada 3 horas","Cada 4 horas","Cada 6 horas"],correct:2,explanation:"La elaboración de cada tanda deberá realizarse en intervalos de 4 horas."},
+  {id:75,category:"Hot Dog",topic:"Warmer de pan",question:"¿A qué temperatura se debe ajustar el warmer de pan para los hot dogs?",options:["100°F","120°F","140°F","150°F"],correct:1,explanation:"La perilla de temperatura del warmer de pan se ajusta a 120°F."},
+  {id:76,category:"Hot Dog",topic:"Warmer de pan",question:"¿Cuántas bolsas de pan caben dentro de cada contenedor del warmer de pan?",options:["1 bolsa","2 bolsas","3 bolsas","4 bolsas"],correct:1,explanation:"Se pueden colocar 2 bolsas de pan dentro de cada contenedor del warmer de pan."},
+  {id:77,category:"Hot Dog",topic:"Warmer de pan",question:"¿Cuánto tiempo se debe esperar para que el pan se caliente correctamente en el warmer?",options:["10 minutos","15 minutos","20 minutos","30 minutos"],correct:2,explanation:"Se deben esperar 20 minutos a que se caliente el pan en el warmer."},
+  {id:78,category:"Hot Dog",topic:"Asador de salchichas",question:"El asador de salchichas de 11 rodillos, ¿cuántas salchichas CHICAS puede preparar?",options:["14 salchichas chicas","20 salchichas chicas","24 salchichas chicas","30 salchichas chicas"],correct:3,explanation:"El asador de 11 rodillos tiene capacidad de 30 salchichas Chicas o 20 jumbo."},
+  {id:79,category:"Hot Dog",topic:"Asador de salchichas",question:"¿A qué temperatura se debe regular el asador de salchichas?",options:["100°F","110°F","120°F","130°F"],correct:2,explanation:"Se regula la temperatura del asador de salchichas a 120°F."},
+  {id:80,category:"Hot Dog",topic:"Salchichas día anterior",question:"¿Cuál es el tiempo de vida de las salchichas del día anterior UNA VEZ colocadas en el asador?",options:["1 hora","2 horas","3 horas","4 horas"],correct:2,explanation:"El tiempo de vida de las salchichas del día anterior en el asador es de 3 horas a partir de sacarlas del refrigerador."},
+  {id:81,category:"Hot Dog",topic:"Salchichas día anterior",question:"¿Cuál de las siguientes es una característica de una salchicha en MAL estado?",options:["Color y olor característico, superficie lisa y brillante","Color oscuro y superficie rugosa","Color rosado uniforme y textura firme","Superficie levemente brillante con olor neutro"],correct:1,explanation:"Salchicha en mal estado: color oscuro y superficie rugosa (también inflada y agrietada, o enlamada)."},
+  {id:82,category:"Hot Dog",topic:"Salchichas día anterior",question:"Al finalizar la operación, las salchichas sobrantes en buen estado, ¿cuánto tiempo deben enfriarse antes de refrigerarse?",options:["5 minutos","10 minutos","20 minutos","30 minutos"],correct:2,explanation:"Se colocan en un recipiente de policarbonato, se dejan enfriar 20 minutos, se tapan y luego se refrigeran."},
+  {id:83,category:"Hot Dog",topic:"Warmer Clymate",question:"¿A qué temperatura (°F) se configura el Warmer Clymate para el compartimiento de hot dogs?",options:["120°F","130°F","140°F","150°F"],correct:3,explanation:"Se configura la perilla 'Heated Holding' al valor de 150 en el Warmer Clymate."},
+  {id:84,category:"Hot Dog",topic:"Warmer Clymate",question:"¿Cuál es el porcentaje de humedad relativa que se configura en el Warmer Clymate?",options:["20%","30%","40%","50%"],correct:2,explanation:"La perilla 'Moisture Control' se configura al valor de 40 (40% de humedad relativa)."},
+  {id:85,category:"Hot Dog",topic:"Warmer Clymate",question:"En el Warmer Clymate, ¿en qué niveles se colocan los Hot Dog CHICOS en el área de entrega?",options:["Los 2 niveles superiores","Los 2 niveles inferiores","El nivel central","Alternados en todos los niveles"],correct:1,explanation:"Los Hot Dog Chicos se introducen en los 2 niveles INFERIORES del compartimiento Warmer Clymate."},
+  {id:86,category:"Hot Dog",topic:"Warmer Clymate",question:"¿Por qué NUNCA se debe apagar el Warmer Clymate usando la pastilla o switch general?",options:["Porque puede provocar un corto circuito","Porque borrará la información del sistema y al encender llenará automáticamente las cámaras desbordando el producto","Porque daña permanentemente el panel de control","Porque invalida la garantía del equipo"],correct:1,explanation:"Al apagar el switch general, se borra la información del sistema y al volver a encender llenará automáticamente las cámaras, desbordando el producto."},
+  {id:87,category:"General",topic:"Higiene",question:"Al manipular alimentos en el proceso de porcionado de nachos, ¿qué se debe usar además del lavado de manos?",options:["Guantes de látex","Guantes de polipapel","Guantes de nitrilo azul","Guantes de vinil transparente"],correct:1,explanation:"Al manipular alimentos en porcionado de nachos se deben usar guantes de polipapel."},
+  {id:88,category:"General",topic:"Almacenamiento",question:"¿Cuál es la estiba MÁXIMA permitida para almacenar los bag in box de jarabe?",options:["2 cajas","3 cajas","4 cajas","6 cajas"],correct:2,explanation:"Los bag in box se colocan sobre rack o tarima con una estiba máxima de CUATRO cajas, NUNCA en el suelo."},
+  {id:89,category:"General",topic:"Responsabilidades",question:"¿Quién es responsable de llevar a cabo la HABILITACIÓN del sistema fountain de refrescos?",options:["El Supervisor de Dulcería y Alimentos","El Vendedor del primer turno","El Vendedor del último turno","El encargado de cocina del primer turno"],correct:1,explanation:"El Vendedor del PRIMER turno es responsable de llevar a cabo la habilitación."},
+  {id:90,category:"General",topic:"Responsabilidades",question:"¿Quién es responsable del proceso de INHABILITACIÓN del sistema fountain de refrescos?",options:["El Supervisor de Dulcería","El Vendedor del primer turno","El Vendedor del último turno","Cualquier vendedor disponible"],correct:2,explanation:"El proceso de inhabilitación es responsabilidad del Vendedor del ÚLTIMO turno."},
+  {id:91,category:"Refrescos",topic:"Presiones CO₂",question:"¿Cuál es el rango de presión CORRECTO de conexión de CO₂ para refrescos?",options:["Entre 30 y 50 PSI","Entre 60 y 80 PSI","Entre 100 y 120 PSI","Exactamente 30 PSI constante"],correct:1,explanation:"La conexión de CO₂ correcta para refrescos debe ser entre 60 y 80 PSI."},
+  {id:92,category:"ICEE",topic:"Modo protección",question:"Cuando la máquina ICEE está en MODO DE PROTECCIÓN y el problema persiste tras el reinicio, ¿qué se debe hacer?",options:["Cambiar el tanque de CO₂ inmediatamente","Apagar la máquina y notificar al Supervisor para contactar al Servicio 98","Descongelar manualmente presionando DEFROST varias veces","Llamar directamente al técnico de Coca-Cola"],correct:1,explanation:"Si persiste, apagar la máquina y notificar al Supervisor para contactar al Servicio 98 (call center de ICEE)."},
+  {id:93,category:"Nachos",topic:"Porcionado",question:"¿Cuál es la DIFERENCIA clave en cómo se colocan los Nachos Doritos vs. Nachos Clásicos en el blíster?",options:["Los Doritos van verticales; los Clásicos van horizontales","Los Doritos se vacían horizontales; los Clásicos van verticales y paralelos al ancho","Ambos se colocan igual, la diferencia es solo el gramaje","Los Doritos se colocan en capas; los Clásicos en una sola capa"],correct:1,explanation:"Doritos: se vacían en blíster de forma horizontal y paralela al ancho. Clásicos: de forma VERTICAL y PARALELA al ancho."},
+  {id:94,category:"Hot Dog",topic:"Área de entrega",question:"En conjuntos con modelo ATMÓSFERA, ¿dónde se almacenan los hot dogs empapelados para entrega al cliente?",options:["En el warmer de pan igual que los demás modelos","En el Warmer Clymate, en el área de entrega","En el refrigerador hasta que el cliente lo solicite","En el warmer Gold Medal, compartimiento inferior"],correct:1,explanation:"Los conjuntos con modelo ATMÓSFERA usan el Warmer Clymate en el área de entrega, no el warmer de pan."},
+  {id:95,category:"General",topic:"Prohibiciones",question:"¿Cuál de las siguientes acciones está PROHIBIDA en el área de almacenamiento de bag in box?",options:["Almacenarlos sobre un rack","Mantener temperatura fresca y seca","Guardar prendas de vestir, calzado u objetos ajenos a insumos","Revisar las fechas de caducidad regularmente"],correct:2,explanation:"Está estrictamente prohibido guardar prendas de vestir, calzado u objetos ajenos a los insumos en el área de almacenamiento."},
+  {id:96,category:"Refrescos",topic:"Tactos",question:"¿Cuáles son las posibles variaciones de SABOR que puede presentar un refresco en mal estado?",options:["Solo puede ser muy dulce","Muy dulce, insípido, sin sabor o amargo","Solo insípido o amargo","Solo con sedimentación visible"],correct:1,explanation:"Las variaciones de sabor en refrescos incluyen: muy dulce, insípido, sin sabor o amargo."},
+  {id:97,category:"ICEE",topic:"Tactos",question:"¿Cuál es el rango de temperatura IDEAL del ICEE?",options:["-10°C a -5°C","-3°C a 2°C","0°C a 5°C","2°C a 7°C"],correct:1,explanation:"La condición ideal de temperatura del ICEE es Congelado: -3°C a 2°C."},
+  {id:98,category:"General",topic:"Documentación",question:"¿Qué documento debe completar DIARIAMENTE el Supervisor de Dulcería o Gerente en turno, al finalizar la habilitación de la máquina ICEE?",options:["Bitácora de control de productos","Lista de verificación para máquina ICEE","FT Elaboración de tandas","Formato de incidencias operativas"],correct:1,explanation:"El Supervisor de Dulcería o Gerente en turno debe completar DIARIAMENTE la Lista de verificación para máquina ICEE."},
+  {id:99,category:"Palomitas",topic:"Warmer Gold Medal",question:"Al retirar el vidrio SUPERIOR del warmer Gold Medal para limpieza, ¿cómo se remueve?",options:["Levantándolo hacia arriba directamente","Deslizándolo hacia enfrente para retirarlo","Jalándolo hacia afuera por los costados","Girándolo 90 grados y luego deslizando"],correct:1,explanation:"El vidrio superior se desliza hacia enfrente para retirarlo (con CUIDADO de no romperlo)."},
+  {id:100,category:"General",topic:"Responsabilidades",question:"¿Quién es responsable de la limpieza DIARIA del warmer Gold Medal de palomitas?",options:["El Vendedor del primer turno","El Vendedor del último turno","El Encargado de la limpieza","El Supervisor de Dulcería"],correct:2,explanation:"La limpieza diaria del warmer Gold Medal es responsabilidad del Encargado de la limpieza."}
+];
+
+// ===== STATE =====
+let questions = [];
+let currentIdx = 0;
+let answered = false;
+let score = 0;
+let wrongQuestions = [];
+let mode = 'all';
+let reviewMode = false;
+
+function setMode(m) {
+  mode = m;
+  ['all','rand50','rand25'].forEach(id => {
+    document.getElementById('mode-'+id).classList.toggle('active', id===m);
+  });
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
+function startQuiz(review=false) {
+  reviewMode = review;
+  if(review) {
+    questions = shuffle(wrongQuestions);
+  } else {
+    let pool = shuffle(ALL_QUESTIONS);
+    if(mode==='rand50') pool = pool.slice(0,50);
+    else if(mode==='rand25') pool = pool.slice(0,25);
+    questions = pool;
+  }
+  currentIdx = 0;
+  score = 0;
+  wrongQuestions = [];
+  answered = false;
+
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  document.getElementById('progress-wrap').style.display = 'flex';
+  document.getElementById('score-badge').style.display = 'block';
+
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = questions[currentIdx];
+  answered = false;
+
+  document.getElementById('q-cat').textContent = q.category;
+  document.getElementById('q-topic').textContent = q.topic;
+  document.getElementById('q-num').textContent = `${currentIdx+1} / ${questions.length}`;
+  document.getElementById('q-text').textContent = q.question;
+  document.getElementById('progress-text').textContent = `${currentIdx+1} / ${questions.length}`;
+  document.getElementById('progress-fill').style.width = `${((currentIdx+1)/questions.length)*100}%`;
+  document.getElementById('score-badge').textContent = `✓ ${score}`;
+
+  const letters = ['A','B','C','D'];
+  const grid = document.getElementById('options-grid');
+  grid.innerHTML = '';
+
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<div class="opt-letter">${letters[i]}</div><div class="opt-text">${opt}</div>`;
+    btn.onclick = () => selectAnswer(i);
+    grid.appendChild(btn);
+  });
+
+  const exp = document.getElementById('explanation');
+  exp.className = 'explanation';
+  document.getElementById('btn-next').disabled = true;
+}
+
+function selectAnswer(idx) {
+  if(answered) return;
+  answered = true;
+
+  const q = questions[currentIdx];
+  const btns = document.querySelectorAll('.option-btn');
+
+  btns.forEach((btn, i) => {
+    btn.disabled = true;
+    if(i === q.correct) {
+      btn.classList.add('correct');
+    } else if(i === idx && idx !== q.correct) {
+      btn.classList.add('wrong');
+    } else {
+      btn.classList.add('dimmed');
+    }
+  });
+
+  const isCorrect = idx === q.correct;
+  if(isCorrect) {
+    score++;
+  } else {
+    wrongQuestions.push(q);
+  }
+
+  document.getElementById('score-badge').textContent = `✓ ${score}`;
+
+  const exp = document.getElementById('explanation');
+  exp.className = 'explanation show';
+  document.getElementById('explanation-text').innerHTML =
+    `<strong>${isCorrect ? '✓ ¡Correcto!' : '✗ Incorrecto.'}</strong> ${q.explanation}`;
+
+  document.getElementById('btn-next').disabled = false;
+
+  if(currentIdx+1 === questions.length) {
+    document.getElementById('btn-next').textContent = 'Ver resultados 📊';
+    document.getElementById('btn-next').onclick = showResults;
+  }
+}
+
+function nextQuestion() {
+  currentIdx++;
+  if(currentIdx >= questions.length) {
+    showResults();
+    return;
+  }
+  document.getElementById('btn-next').textContent = 'Siguiente pregunta →';
+  document.getElementById('btn-next').onclick = nextQuestion;
+  renderQuestion();
+}
+
+function showResults() {
+  document.getElementById('quiz-screen').style.display = 'none';
+  document.getElementById('results-screen').style.display = 'block';
+  document.getElementById('progress-wrap').style.display = 'none';
+  document.getElementById('score-badge').style.display = 'none';
+
+  const total = questions.length;
+  const pct = Math.round((score/total)*100);
+  const wrong = total - score;
+
+  document.getElementById('r-pct').textContent = pct + '%';
+  document.getElementById('r-correct').textContent = score;
+  document.getElementById('r-wrong').textContent = wrong;
+  document.getElementById('r-total').textContent = total;
+
+  let title = '¡Examen completado!';
+  if(pct >= 90) title = '🏆 ¡Excelente dominio!';
+  else if(pct >= 75) title = '👍 ¡Buen resultado!';
+  else if(pct >= 60) title = '📚 Sigue practicando';
+  else title = '⚠️ Necesitas repasar';
+  document.getElementById('r-title').textContent = title;
+  document.getElementById('r-subtitle').textContent = `Obtuviste ${score} de ${total} respuestas correctas (${pct}%)`;
+
+  // Category breakdown
+  const cats = {};
+  questions.forEach(q => {
+    if(!cats[q.category]) cats[q.category] = {correct:0, total:0};
+    cats[q.category].total++;
+  });
+  wrongQuestions.forEach(q => {
+    // already counted in total, now count correct per category
+  });
+  // Reset and recalculate properly
+  const catStats = {};
+  questions.forEach(q => { if(!catStats[q.category]) catStats[q.category] = {c:0,t:0}; catStats[q.category].t++; });
+  // We need to track correct per category - recalculate from wrong list
+  const wrongIds = new Set(wrongQuestions.map(q=>q.id));
+  questions.forEach(q => { if(!wrongIds.has(q.id)) { if(!catStats[q.category]) catStats[q.category]={c:0,t:0}; catStats[q.category].c++; } });
+
+  const bdList = document.getElementById('cat-breakdown-list');
+  bdList.innerHTML = '';
+  Object.entries(catStats).forEach(([cat, s]) => {
+    const pctCat = Math.round((s.c/s.t)*100);
+    const color = pctCat >= 80 ? '#2dc653' : pctCat >= 60 ? '#f5c518' : '#e63946';
+    bdList.innerHTML += `
+      <div class="cat-row">
+        <div class="cat-name" style="font-size:14px;font-weight:600">${cat}</div>
+        <div class="cat-bar-wrap"><div class="cat-bar-fill" style="width:${pctCat}%;background:${color}"></div></div>
+        <div class="cat-score-txt">${s.c}/${s.t}</div>
+      </div>`;
+  });
+
+  const reviewBtn = document.querySelector('[onclick="reviewWrong()"]');
+  if(wrongQuestions.length === 0) {
+    reviewBtn.disabled = true;
+    reviewBtn.style.opacity = '0.4';
+  } else {
+    reviewBtn.disabled = false;
+    reviewBtn.style.opacity = '1';
+    reviewBtn.textContent = `📋 Repasar ${wrongQuestions.length} error(es)`;
+  }
+}
+
+function restartQuiz() {
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('start-screen').style.display = 'block';
+}
+
+function reviewWrong() {
+  if(wrongQuestions.length > 0) startQuiz(true);
+}
+</script>
+</body>
+</html>
+ENDOFFILE
+echo "File created"
